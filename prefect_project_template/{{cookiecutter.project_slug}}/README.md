@@ -1,4 +1,4 @@
-# Bailout-Bot
+# {{cookiecutter.project_name}}
 
 ## Getting Started
 
@@ -13,23 +13,26 @@ This project leverages Poetry for dependency management, virtual environment han
 ## Makefile Commands
 
 ### Prefect
-- `run`: Executes a flow run locally. This flow will still log to prefect, but it will run using the local code.
-- `trigger`:
-- `deploy`
-  - `deploy-dev`
-  - `deploy-prod`
+This project provides Makefile commands for managing Prefect flows.
+
+- `run`: Executes a Prefect flow run locally using your local codebase. This command allows you to test the flow on your machine while still logging to Prefect.
+- `trigger`: Initiates a remote flow run on Prefect for a specified environment. Under the hood it's just `prefect deployment run '$deployment_name'`.
+  - `trigger dev` (default)
+  - `trigger prod`
+- `deploy`: Updates the Prefect deployment for a specified environment by running the deployment script. If no environment is specified, the `APP_ENVIRONMENT` variable is checked or defaults to `dev`.
+  - `deploy dev` (default)
+  - `deploy prod`
 
 ### Setup and Installation
 These commands handle setting up the environment, installing dependencies, and configuring essential tools.
 
-- `default`: Runs the default setup tasks, which include `build`, `install-prod`, and `format`. Use this command for a quick initial setup, ensuring the project is built, essential dependencies are installed, and code formatting is checked.
+- `default`: Runs the default setup tasks, which include `build`, `install-minimal`, and `format`. Use this command for a quick initial setup, ensuring the project is built, essential dependencies are installed, and code formatting is checked.
 - `install`: Sets up the entire project environment, including installing Poetry (if needed), cleaning up old environments, creating a new virtual environment, installing all dependencies, building the project, and setting up pre-commit hooks. This is the recommended command for setting up the project fully, especially for development.
 - `install-poetry`: Installs Poetry within a dedicated virtual environment if it is not already present. This command is useful for ensuring that Poetry is available to manage dependencies, and is typically run as part of the `install` process.
 - `install-root`:  Installs only the root package (the main project) without any additional dependencies, even the ones listed under `[tool.poetry.dependencies]`. This is useful when you only want to install your own project code without any external libraries, typically for packaging or testing purposes.
 - `install-minimal`: Installs only the core dependencies required to run the project, excluding any development or extra dependencies. This command is suitable for setting up a lean, production-like environment.
 - `install-deps`: Installs all dependencies specified in `pyproject.toml`, including both core and development dependencies, along with extras. Use this command if you need the full development environment set up without performing a full project installation.
 - `reinstall`: Re-installs the project environment by cleaning up any existing virtual environment, removing Poetry, and then performing a complete installation with `install`. Use this command when you want to start fresh and reset the entire environment.
-
 
 ### Virtual Environment Management
 Commands to create, delete, or reset the virtual environment, helping maintain a clean, isolated environment.
@@ -63,15 +66,3 @@ Miscellaneous commands for general project maintenance and cleanup.
 
 - `build`: Builds a distributable package (both source distribution and wheel) for the project. This command is useful when preparing the project for deployment or distribution, ensuring that all necessary files are bundled into an installable package.
 - `clean`: Cleans up temporary files, caches, and other unwanted artifacts, including `__pycache__` folders, pytest and ruff caches, and compiled files. Run this command regularly to keep the project environment tidy.
-
-
-## Other
-
-Update deployment:
-`python -m deploy.deployment`
-
-Trigger flow run:
-`prefect deployment run 'log-repo-info/bailout-bot'`
-
-If you need to update blocks:
-- `python -m deploy.github`
