@@ -173,6 +173,21 @@ run:
 	@echo "Running flow locally"
 	@PYTHONPATH=$(PYTHONPATH):src $(POETRY) run python -m main
 
+.PHONY: push-secrets
+push-secrets:
+	@PYTHONPATH=$(PYTHONPATH):deploy $(POETRY) run python -m push_secrets $(word 2, $(MAKECMDGOALS))
+# e.g. make push-secrets upsert_prefect_api_url
+
+
+################################################################################
+# Environment Based Execution
+################################################################################
+# Using make deploy/trigger dev as shown will pass dev as a command, which will cause make to attempt to execute a target named dev.
+# To prevent errors, this line ensures make treats dev and prod as simple arguments rather than separate targets.
+dev prod:
+	@:
+
+
 .PHONY: trigger trigger-dev trigger-prod
 trigger:
 ifeq ($(word 2, $(MAKECMDGOALS)),prod)
@@ -233,12 +248,3 @@ deploy-dev:
 deploy-prod:
 	@echo "Deploying to Prod environment"
 	@APP_ENVIRONMENT=prod PYTHONPATH=$(PYTHONPATH):deploy $(POETRY) run python -m deployment
-
-# Using make deploy/trigger dev as shown will pass dev as a command, which will cause make to attempt to execute a target named dev.
-# To prevent errors, this line ensures make treats dev and prod as simple arguments rather than separate targets.
-dev prod:
-	@:
-
-.PHONY: push-secrets
-push-secrets:
-	@PYTHONPATH=$(PYTHONPATH):deploy $(POETRY) run python -m push_secrets

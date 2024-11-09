@@ -21,7 +21,7 @@ class AppSettings(BaseSettings):
         env_prefix = "APP_"
 
     NAME: str = "Bailout Bot"
-    SLUG: str = "{{cookiecutter.project_slug}}"
+    SLUG: str = "bailout_bot"
     ENVIRONMENT: str = "local"
     DEBUG: bool = False
 
@@ -52,7 +52,7 @@ class PrefectBlocksSettings(BaseSettings):
     class Config(RootConfig):  # noqa: D106
         env_prefix = "BLOCKS_"
 
-    GITHUB_CREDENTIALS: str = "github-credentials"
+    GITHUB_CREDENTIALS: str | None = None
 
 
 class GitSettings(BaseSettings):
@@ -65,12 +65,23 @@ class GitSettings(BaseSettings):
     ACCESS_TOKEN: SecretStr
 
 
+class DockerSettings(BaseSettings):
+    """Git settings."""
+
+    class Config(RootConfig):  # noqa: D106
+        env_prefix = "DOCKER_"
+
+    USERNAME: str | None = None
+    PASSWORD: SecretStr | None = None
+
+
 @dataclass(frozen=True, kw_only=True, slots=True)
 class SettingsConfig:
     app: AppSettings
     prefect: PrefectSettings
     blocks: PrefectBlocksSettings
     git: GitSettings
+    docker: DockerSettings
 
 
 _loaded_settings: SettingsConfig = None
@@ -88,6 +99,7 @@ def load_settings(force_reload: bool = False) -> SettingsConfig:
             prefect=PrefectSettings(),
             blocks=PrefectBlocksSettings(),
             git=GitSettings(),
+            docker=DockerSettings(),
         )
     except ValidationError as exc:
         print(f"Error loading settings: {exc}")

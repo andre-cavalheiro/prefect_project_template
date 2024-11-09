@@ -52,7 +52,7 @@ def list_functions_in_module(module_name: str) -> List[str]:
         return [
             func
             for func in dir(module)
-            if callable(getattr(module, func)) and not func.startswith("_")
+            if callable(getattr(module, func)) and func.startswith("upsert")
         ]
     except ModuleNotFoundError:
         logger.error("Error: module '%s.py' not found." % module_name)
@@ -76,4 +76,15 @@ def execute_function(module_name: str, function_name: str) -> None:
                 % (function_name, module_name)
             )
     except ModuleNotFoundError:
-        logger.error("Error: module '%s.py' not found." % module_name)
+        logger.error("Failed to import module '%s.py'." % module_name)
+
+
+def search_modules(function_name: str) -> str:
+    modules_with_target = []
+
+    modules = list_modules()
+    for module in modules:
+        functions = list_functions_in_module(module)
+        if function_name in functions:
+            modules_with_target.append(module)
+    return modules_with_target
