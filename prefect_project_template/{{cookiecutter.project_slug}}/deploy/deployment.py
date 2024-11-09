@@ -1,11 +1,11 @@
-from settings import config
+import logging
 
+from settings import config
 from prefect.runner.storage import GitRepository
 from prefect_github import GitHubCredentials
 from prefect import flow
 
-from loguru import logger
-
+logger = logging.getLogger(config.app.SLUG)
 
 if __name__ == "__main__":
     logger.info("Starting deployment script")

@@ -1,8 +1,11 @@
 import importlib
+import logging
 import os
+from settings import config
+
 from typing import List
 
-from loguru import logger
+logger = logging.getLogger(config.app.SLUG)
 
 
 def execute_all_modules() -> None:

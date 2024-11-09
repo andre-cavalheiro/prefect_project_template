@@ -1,6 +1,10 @@
+import logging
+from settings import config
+
 from prefect import task
-from loguru import logger
 from utils.requests import with_session, make_request, RetryPolicy, RequestError
+
+logger = logging.getLogger(config.app.SLUG)
 
 
 @task

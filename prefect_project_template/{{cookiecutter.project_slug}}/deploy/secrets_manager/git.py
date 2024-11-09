@@ -1,9 +1,10 @@
+import logging
 from settings import config
 
 from github import Github
 from github import GithubException
 
-from loguru import logger
+logger = logging.getLogger(config.app.SLUG)
 
 
 def upsert_git_access_token(

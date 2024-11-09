@@ -2,7 +2,6 @@ import logging
 import traceback
 from contextlib import asynccontextmanager
 from typing import Any, Generator, TypeAlias
-from loguru import logger as _logger
 
 from aiohttp import ClientTimeout, ContentTypeError
 
@@ -21,7 +20,11 @@ from tenacity import (
     stop_after_attempt,
     wait_random_exponential,
 )
+from settings import config
 from .serializers import json_serialize
+
+_logger = logging.getLogger(config.app.SLUG)
+
 
 ClientSession: TypeAlias = AiohttpClientSession  # Alias for easy reference
 
